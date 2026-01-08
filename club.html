@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Club-kant – YnBeweging demo</title>
+  <link rel="stylesheet" href="./assets/styles.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="row">
+      <div class="brand">
+        <span style="font-size:18px">◼︎</span>
+        <span>YnBeweging – Clubkant</span>
+        <span class="badge">Live business case (demo)</span>
+      </div>
+      <div class="nav">
+        <a class="btn ghost" href="./index.html">Home</a>
+        <a class="btn" href="./club.html">Club-kant</a>
+        <a class="btn" href="./admin.html">Achterkant</a>
+        <a class="btn" href="./present.html">Presenteren</a>
+      </div>
+    </div>
+  </div>
+  <div class="container"><div class="grid cols-2">
+  <div class="card">
+    <div class="row space">
+      <div>
+        <div class="h2" style="margin-bottom:4px">Club-kant</div>
+        <div class="small" id="clubMeta"></div>
+      </div>
+      <div class="pill good" id="walletPill"></div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="row space">
+      <div style="min-width:240px">
+        <label class="small">Jouw rol (demo)</label>
+        <select id="roleSelect"></select>
+      </div>
+
+      <div style="min-width:240px">
+        <label class="small">Zoek aanbod</label>
+        <input class="input" id="q" placeholder="Zoek op titel, type of aanbieder…" />
+      </div>
+
+      <div style="min-width:200px">
+        <label class="small">Route</label>
+        <select id="routeFilter">
+          <option value="">Alle routes</option>
+        </select>
+      </div>
+
+      <div style="min-width:200px">
+        <label class="small">Type</label>
+        <select id="typeFilter">
+          <option value="">Alle types</option>
+        </select>
+      </div>
+
+      <button class="btn" id="openRequests">Mijn aanvragen</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="h2" style="margin-bottom:8px">Aanbevolen voor jouw club</div>
+    <div id="recoRow" class="cards"></div>
+
+    <div class="hr"></div>
+
+    <div class="row space" style="margin-bottom:6px">
+      <div class="h2" style="margin:0">Routes (guided)</div>
+      <div class="small">Start een route: je doorloopt stappen met passend aanbod per stap.</div>
+    </div>
+    <div id="routeCards" class="grid cols-3"></div>
+
+    <div class="hr"></div>
+
+    <div class="row space" style="margin-bottom:6px">
+      <div class="h2" style="margin:0">Alle activiteiten</div>
+      <div class="small" id="resultCount"></div>
+    </div>
+    <div id="offerCards" class="cards"></div>
+  </div>
+
+  <div class="card">
+    <div class="h2">Kennisbank (preview)</div>
+    <p class="p">Een snelle indruk van “wat werkt” op basis van evaluaties. In een echte MVP kan dit groeien naar bewezen interventies, routes en kwaliteitssignalen.</p>
+    <div id="kbMini"></div>
+    <div class="hr"></div>
+    <div class="h2">Waarom dit ‘pakt’ in een pitch</div>
+    <ul class="p" style="margin:0 0 6px 18px">
+      <li>Je laat een club <b>doen</b> i.p.v. erover praten</li>
+      <li>Je laat de ontwikkelaar zien dat het een <b>workflowlaag</b> kan zijn</li>
+      <li>Je eindigt met de achterkant: <b>monitoring, sturing, impact</b></li>
+    </ul>
+    <div class="row" style="margin-top:10px">
+      <a class="btn primary" href="./present.html">Gebruik presentatie-modus</a>
+      <a class="btn" href="./admin.html">Ga naar achterkant</a>
+    </div>
+  </div>
+</div>
+
+<div id="backdrop" class="modalback"></div>
+<div id="drawer" class="drawer">
+  <div class="row space">
+    <h3 style="margin:0">Mijn aanvragen</h3>
+    <button class="btn" id="closeDrawer">Sluiten</button>
+  </div>
+  <div class="small">Statusflow: Nieuw → In behandeling → Gepland → Afgerond</div>
+  <div class="hr"></div>
+  <div id="reqList"></div>
+</div>
+
+<div id="routeModalBack" class="modalback"></div>
+<div id="routeModal" class="drawer" style="right:auto;left:0;border-left:none;border-right:1px solid var(--stroke);transform:translateX(-102%)">
+  <div class="row space">
+    <h3 style="margin:0" id="routeTitle">Route</h3>
+    <button class="btn" id="closeRouteModal">Sluiten</button>
+  </div>
+  <div class="small" id="routeSub"></div>
+  <div class="hr"></div>
+  <div id="stepper" class="stepper"></div>
+  <div class="hr"></div>
+  <div id="stepContent"></div>
+  <div class="hr"></div>
+  <div class="row space">
+    <button class="btn" id="prevStep">Vorige</button>
+    <button class="btn primary" id="nextStep">Volgende</button>
+  </div>
+</div>
+
+<script>
+(async function(){
+  const seed = await loadSeed();
+  let state = loadState(seed);
+
+  document.getElementById("clubMeta").textContent =
+    `${state.club.name} • ${state.club.type} • ${state.club.municipality} • ${state.club.size}`;
+
+  function renderWallet(){
+    document.getElementById("walletPill").textContent = `${state.wallet.label}: ${state.wallet.credits} credits`;
+  }
+  renderWallet();
+
+  const rs = document.getElementById("roleSelect");
+  rs.innerHTML = seed.club.roles.map(r=> `<option ${r===state.role?'selected':''}>${r}</option>`).join("");
+  rs.addEventListener("change", ()=>{
+    state.role = rs.value;
+    log(state,"role",`Rol gewijzigd naar ${state.role}`);
+    toast(`Rol: ${state.role}`);
+    renderAll();
+  });
+
+  const routeFilter = document.getElementById("routeFilter");
+  routeFilter.innerHTML += seed.routes.map(r=> `<option value="${r.id}">${r.icon} ${r.title}</option>`).join("");
+
+  const types = Array.from(new Set(seed.offers.map(o=>o.type))).sort();
+  document.getElementById("typeFilter").innerHTML += types.map(t=> `<option value="${t}">${t}</option>`).join("");
+
+  ["q","routeFilter","typeFilter"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", renderOffers);
+    document.getElementById(id).addEventListener("change", renderOffers);
+  });
+
+  const drawer = document.getElementById("drawer");
+  const back = document.getElementById("backdrop");
+  document.getElementById("openRequests").addEventListener("click", ()=>{
+    drawer.classList.add("open"); back.classList.add("show"); renderRequests();
+  });
+  document.getElementById("closeDrawer").addEventListener("click", ()=>{
+    drawer.classList.remove("open"); back.classList.remove("show");
+  });
+  back.addEventListener("click", ()=>{
+    drawer.classList.remove("open"); back.classList.remove("show");
+  });
+
+  const rBack = document.getElementById("routeModalBack");
+  const rModal = document.getElementById("routeModal");
+  let activeRoute = null;
+  let activeStep = 0;
+
+  function openRoute(routeId){
+    activeRoute = seed.routes.find(r=>r.id===routeId);
+    activeStep = 0;
+    document.getElementById("routeTitle").textContent = `${activeRoute.icon} ${activeRoute.title}`;
+    document.getElementById("routeSub").textContent = activeRoute.subtitle;
+    rBack.classList.add("show");
+    rModal.classList.add("open");
+    renderRouteWizard();
+  }
+  function closeRoute(){
+    rBack.classList.remove("show");
+    rModal.classList.remove("open");
+  }
+  document.getElementById("closeRouteModal").addEventListener("click", closeRoute);
+  rBack.addEventListener("click", closeRoute);
+
+  document.getElementById("prevStep").addEventListener("click", ()=>{
+    activeStep = Math.max(0, activeStep-1); renderRouteWizard();
+  });
+  document.getElementById("nextStep").addEventListener("click", ()=>{
+    activeStep = Math.min(activeRoute.steps.length-1, activeStep+1); renderRouteWizard();
+  });
+
+  function renderRouteWizard(){
+    const steps = activeRoute.steps;
+    document.getElementById("stepper").innerHTML =
+      steps.map((s,i)=> `<span class="step ${i===activeStep?'active':''}">${i+1}. ${s.title}</span>`).join("");
+    const step = steps[activeStep];
+
+    const offers = seed.offers.filter(o=> o.route_id===activeRoute.id && o.step_index===activeStep);
+    offers.sort((a,b)=> scoreOffer(seed,state,b) - scoreOffer(seed,state,a));
+    const main = offers[0];
+    const badge = main ? provenBadge(seed,state,main.id) : null;
+
+    document.getElementById("stepContent").innerHTML = `
+      <div class="h2" style="margin-bottom:6px">${step.title}</div>
+      <div class="p">${step.goal}</div>
+      ${main ? `
+      <div class="card soft" style="border-radius:14px">
+        <div class="row space">
+          <div>
+            <div class="offer-title">${main.title} ${badge?`<span class="tag accent">${badge}</span>`:""}</div>
+            <div class="offer-meta">
+              <span class="tag">${main.provider}</span>
+              <span class="tag">${main.type}</span>
+              <span class="tag">Duur: ${main.duration}</span>
+              <span class="tag accent">${main.credits} credits</span>
+            </div>
+          </div>
+          <button class="btn primary" id="applyMain">Aanvragen</button>
+        </div>
+        <div class="offer-sum">${main.summary}</div>
+        <div class="small">Past bij rol <b>${state.role}</b> (demo-logica).</div>
+      </div>` : `<div class="p">Voor deze stap is nog geen aanbod gekoppeld (interessant om samen te ontwerpen).</div>`}
+      ${offers.length>1 ? `
+        <div class="hr"></div>
+        <div class="small">Alternatieven</div>
+        ${offers.slice(1).map(o=> `
+          <div class="card soft" style="margin-top:10px;border-radius:14px">
+            <div class="row space">
+              <div>
+                <div class="offer-title">${o.title}</div>
+                <div class="offer-meta">
+                  <span class="tag">${o.provider}</span>
+                  <span class="tag">${o.type}</span>
+                  <span class="tag accent">${o.credits} credits</span>
+                </div>
+              </div>
+              <button class="btn" data-offer="${o.id}">Aanvragen</button>
+            </div>
+          </div>
+        `).join("")}
+      `:""}
+    `;
+
+    if(main){
+      document.getElementById("applyMain").addEventListener("click", ()=> applyForOffer(main.id,{via:"route",route_id:activeRoute.id,step:activeStep}));
+      document.querySelectorAll("[data-offer]").forEach(btn=>{
+        btn.addEventListener("click", ()=> applyForOffer(btn.getAttribute("data-offer"),{via:"route",route_id:activeRoute.id,step:activeStep}));
+      });
+    }
+  }
+
+  function renderRoutes(){
+    document.getElementById("routeCards").innerHTML = seed.routes.map(r=> `
+      <div class="card soft">
+        <div class="row space">
+          <div>
+            <div class="offer-title" style="font-size:18px">${r.icon} ${r.title}</div>
+            <div class="small">${r.subtitle}</div>
+          </div>
+          <button class="btn primary" data-route="${r.id}">Start route</button>
+        </div>
+        <div class="hr"></div>
+        <div class="small">Stappen</div>
+        <div class="p" style="margin:8px 0 0">${r.steps.map((s,i)=> `${i+1}. ${s.title}`).join("<br/>")}</div>
+      </div>
+    `).join("");
+    document.querySelectorAll("[data-route]").forEach(b=> b.addEventListener("click", ()=> openRoute(b.getAttribute("data-route"))));
+  }
+
+  function offerCard(o, compact=false){
+    const route = seed.routes.find(r=>r.id===o.route_id);
+    const badge = provenBadge(seed,state,o.id);
+    const roleHit = (o.roles||[]).includes(state.role);
+    return `
+      <div class="card soft">
+        <div class="offer-title">${o.title} ${badge?`<span class="tag accent">${badge}</span>`:""}</div>
+        <div class="offer-meta">
+          <span class="tag">${route?`${route.icon} ${route.title}`:"Route"}</span>
+          <span class="tag">${o.provider}</span>
+          <span class="tag">${o.type}</span>
+          <span class="tag">Duur: ${o.duration}</span>
+          <span class="tag accent">${o.credits} credits</span>
+          ${roleHit?`<span class="tag accent">Past bij rol</span>`:`<span class="tag">Andere rol</span>`}
+        </div>
+        ${compact?``:`<div class="offer-sum">${o.summary}</div>`}
+        <div class="row space">
+          <div class="small">Stap: ${o.step_index+1}</div>
+          <button class="btn primary applyBtn" data-offer="${o.id}">Aanvragen</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderReco(){
+    const recos = recommendedOffers(seed,state,3);
+    document.getElementById("recoRow").innerHTML = recos.map(o=> offerCard(o,true)).join("");
+    attachApplyHandlers();
+  }
+
+  function renderKBMini(){
+    const stats = Array.from(offerStats(seed,state).values());
+    stats.sort((a,b)=> (b.avg*b.count) - (a.avg*a.count));
+    const top = stats.filter(s=>s.count>0).slice(0,5);
+    document.getElementById("kbMini").innerHTML = top.length ? `
+      <table class="table">
+        <thead><tr><th>Aanbod</th><th>Rating</th><th>Aantal</th><th>Status</th></tr></thead>
+        <tbody>
+          ${top.map(s=>{
+            const badge = provenBadge(seed,state,s.offer.id);
+            return `<tr>
+              <td>${s.offer.title}</td>
+              <td>${s.avg.toFixed(1)} / 5</td>
+              <td>${s.count}</td>
+              <td>${badge?`<span class="tag accent">${badge}</span>`:`<span class="tag">Nieuw</span>`}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+      <div class="small">In de achterkant zie je dit uitgebreider (incl. quotes en export).</div>
+    ` : `<div class="p">Nog geen evaluaties in deze demo.</div>`;
+  }
+
+  function renderOffers(){
+    const q = document.getElementById("q").value.trim().toLowerCase();
+    const rf = document.getElementById("routeFilter").value;
+    const tf = document.getElementById("typeFilter").value;
+
+    let offers = seed.offers.slice();
+    if(rf) offers = offers.filter(o=>o.route_id===rf);
+    if(tf) offers = offers.filter(o=>o.type===tf);
+    if(q) offers = offers.filter(o=> (`${o.title} ${o.provider} ${o.type} ${o.summary}`).toLowerCase().includes(q));
+    offers.sort((a,b)=> scoreOffer(seed,state,b) - scoreOffer(seed,state,a));
+
+    document.getElementById("offerCards").innerHTML = offers.map(o=> offerCard(o,false)).join("");
+    document.getElementById("resultCount").textContent = `${offers.length} resultaten • gesorteerd op relevantie voor rol ${state.role}`;
+    attachApplyHandlers();
+  }
+
+  function attachApplyHandlers(){
+    document.querySelectorAll(".applyBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=> applyForOffer(btn.getAttribute("data-offer"),{via:"catalog"}));
+    });
+  }
+
+  function applyForOffer(offerId, meta){
+    const offer = seed.offers.find(o=>o.id===offerId);
+    const reqId = "req_" + Math.random().toString(16).slice(2,10);
+    const req = {
+      id:reqId, offer_id:offerId, created_at:nowISO(), status:"Nieuw",
+      route_id:offer.route_id, step_index:offer.step_index, credits:offer.credits, meta
+    };
+    state.requests.unshift(req);
+    log(state,"request_created",`Aanvraag aangemaakt: ${offer.title}`,{req});
+    saveState(state);
+    toast("Aanvraag aangemaakt ✅");
+    renderRequests();
+  }
+
+  function renderRequests(){
+    const byId = new Map(seed.offers.map(o=>[o.id,o]));
+    if(!state.requests.length){
+      document.getElementById("reqList").innerHTML = `<div class="p">Nog geen aanvragen. Start een route of vraag een activiteit aan.</div>`;
+      return;
+    }
+    document.getElementById("reqList").innerHTML = state.requests.map(r=>{
+      const offer = byId.get(r.offer_id);
+      const route = seed.routes.find(rt=>rt.id===r.route_id);
+      return `
+        <div class="card soft" style="margin-bottom:12px">
+          <div class="row space">
+            <div>
+              <div class="offer-title" style="margin:0">${offer.title}</div>
+              <div class="small">${route?route.title:""} • Stap ${r.step_index+1} • ${fmtDate(r.created_at)}</div>
+            </div>
+            <span class="pill">${r.status}</span>
+          </div>
+          <div class="hr"></div>
+          <div class="row">
+            ${["Nieuw","In behandeling","Gepland","Afgerond"].map(s=>`
+              <button class="btn ${r.status===s?'primary':''}" data-setstatus="${s}" data-req="${r.id}">${s}</button>
+            `).join("")}
+          </div>
+          <div class="hr"></div>
+          <div class="row space">
+            <div class="small">Kosten: <b>${r.credits} credits</b></div>
+            <button class="btn" data-eval="${r.id}">Evalueren</button>
+          </div>
+          <div id="eval_${r.id}" style="display:none;margin-top:10px">
+            <label class="small">Rating</label>
+            <select id="rate_${r.id}">
+              ${[5,4,3,2,1].map(x=>`<option value="${x}">${x}</option>`).join("")}
+            </select>
+            <label class="small" style="margin-top:8px;display:block">Opmerking</label>
+            <textarea id="com_${r.id}" rows="3" placeholder="Kort: wat werkte wel/niet?"></textarea>
+            <div class="row" style="margin-top:10px">
+              <button class="btn primary" data-saveeval="${r.id}">Opslaan</button>
+              <button class="btn" data-canceleval="${r.id}">Annuleren</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    document.querySelectorAll("[data-setstatus]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-req");
+        const s = btn.getAttribute("data-setstatus");
+        const req = state.requests.find(x=>x.id===id);
+        if(!req) return;
+        const prev = req.status;
+        req.status = s;
+
+        if(prev !== "Gepland" && s === "Gepland"){
+          state.wallet.credits = Math.max(0, state.wallet.credits - req.credits);
+          log(state,"wallet_commit",`Credits afgeboekt (${req.credits}) bij status 'Gepland'`,{req_id:id,credits:req.credits});
+          renderWallet();
+        }
+        log(state,"status",`Status gewijzigd: ${prev} → ${s}`,{req_id:id});
+        saveState(state);
+        toast(`Status: ${s}`);
+        renderRequests();
+        renderKBMini();
+        renderReco();
+      });
+    });
+
+    document.querySelectorAll("[data-eval]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-eval");
+        const el = document.getElementById("eval_"+id);
+        el.style.display = el.style.display==="none" ? "block" : "none";
+      });
+    });
+    document.querySelectorAll("[data-canceleval]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-canceleval");
+        document.getElementById("eval_"+id).style.display="none";
+      });
+    });
+    document.querySelectorAll("[data-saveeval]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const id = btn.getAttribute("data-saveeval");
+        const req = state.requests.find(x=>x.id===id);
+        if(!req) return;
+        const rating = parseInt(document.getElementById("rate_"+id).value,10);
+        const comment = document.getElementById("com_"+id).value.trim();
+        state.evaluations.unshift({offer_id:req.offer_id,rating,comment,t:nowISO(),by:state.role});
+        log(state,"evaluation",`Evaluatie toegevoegd (rating ${rating})`,{offer_id:req.offer_id});
+        saveState(state);
+        toast("Evaluatie opgeslagen ✅");
+        document.getElementById("eval_"+id).style.display="none";
+        renderKBMini();
+        renderReco();
+      });
+    });
+  }
+
+  function renderAll(){
+    state = loadState(seed);
+    renderWallet();
+    renderReco();
+    renderRoutes();
+    renderOffers();
+    renderKBMini();
+  }
+
+  renderAll();
+})();
+</script>
+</div>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

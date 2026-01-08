@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Presenteren – YnBeweging demo</title>
+  <link rel="stylesheet" href="./assets/styles.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="row">
+      <div class="brand">
+        <span style="font-size:18px">◼︎</span>
+        <span>YnBeweging – Clubkant</span>
+        <span class="badge">Live business case (demo)</span>
+      </div>
+      <div class="nav">
+        <a class="btn ghost" href="./index.html">Home</a>
+        <a class="btn" href="./club.html">Club-kant</a>
+        <a class="btn" href="./admin.html">Achterkant</a>
+        <a class="btn" href="./present.html">Presenteren</a>
+      </div>
+    </div>
+  </div>
+  <div class="container"><div class="card">
+  <h1 class="h1" style="font-size:38px">Presentatie-modus</h1>
+  <p class="p">
+    Gebruik dit scherm om de ontwikkelaar <b>stap voor stap</b> mee te nemen.
+    Je kunt live klikken naar de club-kant en de achterkant, met bijpassende talking points.
+  </p>
+
+  <div class="grid cols-2">
+    <div class="card soft">
+      <div class="h2">Live demo knoppen</div>
+      <div class="row" style="margin-top:10px">
+        <a class="btn primary" href="./club.html">1) Club-kant</a>
+        <a class="btn" href="./admin.html">2) Achterkant</a>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+      <div class="hr"></div>
+      <div class="small">Tip: open Club-kant en Achterkant in aparte tabbladen voor snelle switching.</div>
+    </div>
+
+    <div class="card soft">
+      <div class="h2">Snelle verhaallijn (7 minuten)</div>
+      <ol class="p" style="margin:0 0 0 18px">
+        <li><b>Voorverkenning</b> – we willen jullie denkvermogen (30s)</li>
+        <li><b>De frustratie</b> – clubs shoppen in versnippering (60s)</li>
+        <li><b>De aha</b> – club-kant als workflowlaag (60s)</li>
+        <li><b>Doe het live</b> – route starten, aanvraag, status, evaluatie (3 min)</li>
+        <li><b>Achterkant</b> – KPI’s, kennisbank, export (1 min)</li>
+        <li><b>Vraag</b> – 2 sessies discovery + PoC-scope (60s)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+
+  <div class="grid cols-2">
+    <div class="card soft">
+      <div class="h2">Talking points per klik</div>
+      <div class="p"><b>Club-kant</b></div>
+      <ul class="p" style="margin:0 0 0 18px">
+        <li>“We bouwen op jullie basis: aanbod blijft aanbod.”</li>
+        <li>“Nieuw is de workflow: vraag → actie → terugkoppeling.”</li>
+        <li>“Routes maken het behapbaar: stap-voor-stap, per rol.”</li>
+        <li>“‘Aanbevolen’ is nu demo-logica, maar het toont het potentieel.”</li>
+      </ul>
+      <div class="hr"></div>
+      <div class="p"><b>Achterkant</b></div>
+      <ul class="p" style="margin:0 0 0 18px">
+        <li>“Hier wordt het strategisch: je ziet wat werkt en waar behoefte zit.”</li>
+        <li>“Wallet/credits laat ‘money follows action’ voelen.”</li>
+        <li>“Kennisbank = kwaliteitsfeedback-loop (bewezen/veelbelovend).”</li>
+        <li>“Export: haakje naar rapportage, verantwoording, dashboards.”</li>
+      </ul>
+    </div>
+
+    <div class="card soft">
+      <div class="h2">Welke vragen je stelt (developer-prikkel)</div>
+      <ul class="p" style="margin:0 0 0 18px">
+        <li>“Als dit een <b>module</b> is: waar past die het best in jullie platform?”</li>
+        <li>“Welke onderdelen kunnen we <b>hergebruiken</b> (accounts, aanbod, filters)?”</li>
+        <li>“Wat is de <b>kleinste PoC</b> die jullie vertrouwen geeft?”</li>
+        <li>“Welke events willen jullie vanaf dag 1 loggen?”</li>
+      </ul>
+      <div class="hr"></div>
+      <div class="row">
+        <a class="btn primary" href="./admin.html">Naar achterkant</a>
+        <a class="btn" href="./club.html">Naar club-kant</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById("resetBtn").addEventListener("click", resetDemo);
+</script>
+</div>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

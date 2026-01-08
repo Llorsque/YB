@@ -1,149 +1,281 @@
 {
   "meta": {
-    "generated": "2026-01-08",
-    "demo": "YnBeweging voor Clubs — voorverkenning"
+    "name": "YnBeweging – Clubkant Demo",
+    "version": "2.0.0",
+    "generated_at": "2026-01-08"
   },
   "club": {
-    "id": "club_wijnjewoude",
-    "name": "SV Wijnjewoude",
-    "type": "voetbalvereniging",
+    "id": "club_001",
+    "name": "VV Voorbeeld",
     "municipality": "Opsterland",
-    "walletCredits": 1500,
+    "type": "Voetbalvereniging",
+    "size": "250+ leden",
+    "wallet": {
+      "label": "Tegoed (Lokaal Sportakkoord)",
+      "credits": 20
+    },
+    "default_role": "Bestuurder",
     "roles": [
-      {
-        "id": "u1",
-        "name": "Sanne (Clubadmin)",
-        "role": "bestuurder"
-      },
-      {
-        "id": "u2",
-        "name": "Jelmer (Penningmeester)",
-        "role": "penningmeester"
-      },
-      {
-        "id": "u3",
-        "name": "Kim (Trainer)",
-        "role": "trainer"
-      }
+      "Bestuurder",
+      "Trainer",
+      "Penningmeester",
+      "Vrijwilligerscoördinator"
+    ],
+    "focus_routes": [
+      "route_safe",
+      "route_volunteers"
     ]
   },
-  "offers": [
-    {
-      "id": "of_veilig_1",
-      "title": "Verenigingsbrede gedragscode + teamafspraken",
-      "provider": "Sport Fryslân",
-      "type": "Begeleiding",
-      "route": "Veilig sportklimaat",
-      "durationMin": 90,
-      "level": "Basis",
-      "priceCredits": 250,
-      "tags": [
-        "route",
-        "workshop"
-      ],
-      "summary": "In 90 minuten leg je met bestuur + trainers de basis voor duidelijke afspraken en een positief klimaat."
-    },
-    {
-      "id": "of_veilig_2",
-      "title": "Training Vertrouwenscontactpersoon (VCP)",
-      "provider": "NOC*NSF partner",
-      "type": "Cursus",
-      "route": "Veilig sportklimaat",
-      "durationMin": 240,
-      "level": "Verdieping",
-      "priceCredits": 350,
-      "tags": [
-        "certificaat",
-        "vcp"
-      ],
-      "summary": "Praktische training: signalen herkennen, doorverwijzen, rolafbakening en communicatie."
-    },
-    {
-      "id": "of_vrijw_1",
-      "title": "Vrijwilligersplan in 1 avond",
-      "provider": "ClubkaderCoach netwerk",
-      "type": "Begeleiding",
-      "route": "Vrijwilligersbeleid",
-      "durationMin": 120,
-      "level": "Basis",
-      "priceCredits": 300,
-      "tags": [
-        "plan",
-        "tooling"
-      ],
-      "summary": "Van losse acties naar een simpel plan met rollen, taken, instroom en behoud."
-    },
-    {
-      "id": "of_fin_1",
-      "title": "Financieel gezond: quickscan + acties",
-      "provider": "Sport Fryslân",
-      "type": "Tool",
-      "route": "Financieel gezond",
-      "durationMin": 60,
-      "level": "Basis",
-      "priceCredits": 200,
-      "tags": [
-        "quickscan",
-        "dashboard"
-      ],
-      "summary": "Inzicht in kosten, contributie, vrijwilligerswaarde en een actie-overzicht voor 3 maanden."
-    },
-    {
-      "id": "of_kader_1",
-      "title": "Trainersbegeleiding: pedagogisch coachen (4 weken)",
-      "provider": "Opleider X",
-      "type": "Pakket",
-      "route": "Opgeleid kader",
-      "durationMin": 240,
-      "level": "Verdieping",
-      "priceCredits": 500,
-      "tags": [
-        "pakket",
-        "praktijk"
-      ],
-      "summary": "Vier sessies met trainers: didactiek, omgaan met gedrag, feedback en structuur op het veld."
-    },
-    {
-      "id": "of_comm_1",
-      "title": "Heldere communicatie: WhatsApp/nieuwsbrief kit",
-      "provider": "Sport Fryslân",
-      "type": "Tool",
-      "route": "Heldere communicatie",
-      "durationMin": 45,
-      "level": "Basis",
-      "priceCredits": 150,
-      "tags": [
-        "templates",
-        "quickwin"
-      ],
-      "summary": "Kant-en-klare templates en een simpele contentkalender om leden en vrijwilligers beter te bereiken."
-    }
-  ],
   "routes": [
     {
-      "id": "r1",
-      "name": "Veilig sportklimaat",
-      "goal": "Afspraken, rolverdeling en veilige cultuur."
+      "id": "route_safe",
+      "title": "Veilig sportklimaat",
+      "subtitle": "Van gedragsregels tot borging",
+      "icon": "🛡️",
+      "steps": [
+        {
+          "title": "Nulmeting & quickscan",
+          "goal": "Krijg zicht op risico’s en prioriteiten"
+        },
+        {
+          "title": "Gedragsregels & afspraken",
+          "goal": "Maak het concreet en gedragen"
+        },
+        {
+          "title": "Aanstellen vertrouwenscontactpersoon",
+          "goal": "Zorg voor een duidelijke route"
+        },
+        {
+          "title": "Borging & herhaling",
+          "goal": "Maak het onderdeel van de clubcultuur"
+        }
+      ]
     },
     {
-      "id": "r2",
-      "name": "Vrijwilligersbeleid",
-      "goal": "Instroom, behoud en duidelijke taken."
+      "id": "route_volunteers",
+      "title": "Vrijwilligersbeleid",
+      "subtitle": "Werven, waarderen, vasthouden",
+      "icon": "🤝",
+      "steps": [
+        {
+          "title": "Vrijwilligersscan",
+          "goal": "Wie doet wat? Waar zitten gaten?"
+        },
+        {
+          "title": "Wervingscampagne",
+          "goal": "Gericht mensen aanspreken en activeren"
+        },
+        {
+          "title": "Taakpakketten & onboarding",
+          "goal": "Maak het klein en haalbaar"
+        },
+        {
+          "title": "Waardering & retentie",
+          "goal": "Hou mensen betrokken"
+        }
+      ]
     },
     {
-      "id": "r3",
-      "name": "Financieel gezond",
-      "goal": "Inzicht + acties om structureel gezond te blijven."
+      "id": "route_finance",
+      "title": "Financieel gezond",
+      "subtitle": "Grip op kosten en inkomsten",
+      "icon": "💶",
+      "steps": [
+        {
+          "title": "Inzicht & begrotingsscan",
+          "goal": "Waar lekt het? Waar zit ruimte?"
+        },
+        {
+          "title": "Contributie & prijsbeleid",
+          "goal": "Transparant en eerlijk"
+        },
+        {
+          "title": "Sponsoring & fondsen",
+          "goal": "Meer bronnen, minder stress"
+        },
+        {
+          "title": "Sturen met dashboards",
+          "goal": "Maak voortgang zichtbaar"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "id": "offer_qs_safe",
+      "title": "Quickscan Veilig Sportklimaat",
+      "provider": "Sport Fryslân",
+      "type": "Quickscan",
+      "route_id": "route_safe",
+      "step_index": 0,
+      "roles": [
+        "Bestuurder",
+        "Trainer"
+      ],
+      "duration": "2 weken",
+      "credits": 3,
+      "summary": "Korte intake + scan op basis van de 4 V’s en clubcontext. Je krijgt een top-3 aanpakpunten."
     },
     {
-      "id": "r4",
-      "name": "Opgeleid kader",
-      "goal": "Trainers ondersteunen en kwaliteit verhogen."
+      "id": "offer_rules_workshop",
+      "title": "Workshop Gedragsregels & Afspraken",
+      "provider": "Sport Fryslân",
+      "type": "Workshop",
+      "route_id": "route_safe",
+      "step_index": 1,
+      "roles": [
+        "Bestuurder",
+        "Trainer",
+        "Vrijwilligerscoördinator"
+      ],
+      "duration": "1 avond",
+      "credits": 4,
+      "summary": "Interactieve sessie met bestuur, trainers en ouders. Eindigt met gedragen afspraken en follow-up."
     },
     {
-      "id": "r5",
-      "name": "Heldere communicatie",
-      "goal": "Meer bereik, minder ruis, hogere betrokkenheid."
+      "id": "offer_vcp_training",
+      "title": "Training Vertrouwenscontactpersoon (VCP)",
+      "provider": "NOC*NSF / partner",
+      "type": "Training",
+      "route_id": "route_safe",
+      "step_index": 2,
+      "roles": [
+        "Bestuurder"
+      ],
+      "duration": "1 dag",
+      "credits": 5,
+      "summary": "Rolhelderheid, doorverwijzen en casuïstiek. Inclusief toolkit en borgingsadvies."
+    },
+    {
+      "id": "offer_borging_toolkit",
+      "title": "Borgingstoolkit: Veilig sportklimaat",
+      "provider": "Sport Fryslân",
+      "type": "Toolkit",
+      "route_id": "route_safe",
+      "step_index": 3,
+      "roles": [
+        "Bestuurder",
+        "Trainer"
+      ],
+      "duration": "Doorlopend",
+      "credits": 2,
+      "summary": "Templates, jaarcyclus, communicatieformats en checklists om afspraken levend te houden."
+    },
+    {
+      "id": "offer_vol_scan",
+      "title": "Vrijwilligersscan & takenkaart",
+      "provider": "Sport Fryslân",
+      "type": "Quickscan",
+      "route_id": "route_volunteers",
+      "step_index": 0,
+      "roles": [
+        "Vrijwilligerscoördinator",
+        "Bestuurder"
+      ],
+      "duration": "2 weken",
+      "credits": 3,
+      "summary": "Inventarisatie van taken, bezetting en knelpunten. Je krijgt een takenkaart en prioriteiten."
+    },
+    {
+      "id": "offer_werving_sprint",
+      "title": "Wervings-sprint (2 weken)",
+      "provider": "Marketing partner",
+      "type": "Sprint",
+      "route_id": "route_volunteers",
+      "step_index": 1,
+      "roles": [
+        "Vrijwilligerscoördinator",
+        "Bestuurder"
+      ],
+      "duration": "2 weken",
+      "credits": 4,
+      "summary": "Korte campagne: doelgroep, boodschap, kanalen, materialen. Gericht op 3 functies."
+    },
+    {
+      "id": "offer_onboarding_pack",
+      "title": "Onboarding-pakket vrijwilligers",
+      "provider": "Sport Fryslân",
+      "type": "Toolkit",
+      "route_id": "route_volunteers",
+      "step_index": 2,
+      "roles": [
+        "Vrijwilligerscoördinator"
+      ],
+      "duration": "Doorlopend",
+      "credits": 2,
+      "summary": "Taakpakketten, buddy-systeem, eerste 30 dagen plan en communicatieformats."
+    },
+    {
+      "id": "offer_waardering",
+      "title": "Waarderingsplan & clubavond",
+      "provider": "Sport Fryslân",
+      "type": "Workshop",
+      "route_id": "route_volunteers",
+      "step_index": 3,
+      "roles": [
+        "Bestuurder",
+        "Vrijwilligerscoördinator"
+      ],
+      "duration": "1 avond",
+      "credits": 3,
+      "summary": "Maak waardering structureel: ritme, budget, rituelen. Eindigt met uitvoerplan."
+    },
+    {
+      "id": "offer_budget_scan",
+      "title": "Begrotingsscan (penningmeester + bestuur)",
+      "provider": "Financieel expert",
+      "type": "Quickscan",
+      "route_id": "route_finance",
+      "step_index": 0,
+      "roles": [
+        "Penningmeester",
+        "Bestuurder"
+      ],
+      "duration": "2 weken",
+      "credits": 4,
+      "summary": "Doorloop begroting/jaarrekening, kostenstructuur en inkomsten. Resultaat: 5 verbeterkansen."
+    },
+    {
+      "id": "offer_sponsor_kit",
+      "title": "Sponsorpakket & pitch deck",
+      "provider": "Sport Fryslân",
+      "type": "Toolkit",
+      "route_id": "route_finance",
+      "step_index": 2,
+      "roles": [
+        "Penningmeester",
+        "Bestuurder"
+      ],
+      "duration": "Doorlopend",
+      "credits": 3,
+      "summary": "Templates voor sponsorproposities, tariefkaarten en korte pitch slides."
+    }
+  ],
+  "demo_evaluations": [
+    {
+      "offer_id": "offer_qs_safe",
+      "rating": 5,
+      "comment": "Heel concreet. Top-3 aanpakpunten waren meteen bruikbaar."
+    },
+    {
+      "offer_id": "offer_rules_workshop",
+      "rating": 4,
+      "comment": "Goede werkvormen, duidelijke afspraken. Volgende stap graag inplannen."
+    },
+    {
+      "offer_id": "offer_vol_scan",
+      "rating": 5,
+      "comment": "Eindelijk overzicht in taken. Dit hadden we jaren eerder moeten doen."
+    },
+    {
+      "offer_id": "offer_werving_sprint",
+      "rating": 4,
+      "comment": "Snelle campagne, direct reacties. We zoeken nog 1 rol extra."
+    },
+    {
+      "offer_id": "offer_vol_scan",
+      "rating": 4,
+      "comment": "Takenkaart hielp om het gesprek met ouders aan te gaan."
     }
   ]
 }

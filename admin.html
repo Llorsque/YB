@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Achterkant – YnBeweging demo</title>
+  <link rel="stylesheet" href="./assets/styles.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="row">
+      <div class="brand">
+        <span style="font-size:18px">◼︎</span>
+        <span>YnBeweging – Clubkant</span>
+        <span class="badge">Live business case (demo)</span>
+      </div>
+      <div class="nav">
+        <a class="btn ghost" href="./index.html">Home</a>
+        <a class="btn" href="./club.html">Club-kant</a>
+        <a class="btn" href="./admin.html">Achterkant</a>
+        <a class="btn" href="./present.html">Presenteren</a>
+      </div>
+    </div>
+  </div>
+  <div class="container"><div class="grid cols-2">
+  <div class="card">
+    <div class="row space">
+      <div>
+        <h1 class="h2" style="font-size:28px;margin:0 0 4px">Achterkant</h1>
+        <div class="small" id="adminMeta"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="resetBtn">Reset demo</button>
+        <button class="btn primary" id="exportBtn">Export JSON</button>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid cols-3">
+      <div class="card soft kpi"><div class="v" id="kpiRequests">0</div><div class="l">Aanvragen totaal</div></div>
+      <div class="card soft kpi"><div class="v" id="kpiDone">0%</div><div class="l">Afgerond (rate)</div></div>
+      <div class="card soft kpi"><div class="v" id="kpiRating">–</div><div class="l">Gem. beoordeling</div></div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="h2">Route-populariteit</div>
+    <div class="p">Waar wordt op aangevraagd? (input voor sturing op middelen en aanbodontwikkeling)</div>
+    <div id="routeBars" class="bars"></div>
+
+    <div class="hr"></div>
+
+    <div class="h2">Audit-log (monitoring)</div>
+    <div class="small">Laat zien wat er gebeurt: aanvragen, statussen, wallet, evaluaties.</div>
+    <div style="max-height:280px;overflow:auto;margin-top:10px">
+      <table class="table" id="logTable">
+        <thead><tr><th>Wanneer</th><th>Type</th><th>Bericht</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="h2">Kennisbank: wat werkt</div>
+    <p class="p">Op basis van evaluaties ontstaat een ‘bewezen’ / ‘veelbelovend’ signaal. Dit is precies de feedback-loop die het platform strategisch maakt.</p>
+    <div id="kbTableWrap"></div>
+
+    <div class="hr"></div>
+
+    <div class="h2">Quotes (bewijs in woorden)</div>
+    <div id="quotes"></div>
+  </div>
+</div>
+
+<script>
+(async function(){
+  const seed = await loadSeed();
+  let state = loadState(seed);
+  document.getElementById("adminMeta").textContent = `${state.club.name} • ${state.club.municipality} • Wallet: ${state.wallet.credits} credits`;
+
+  document.getElementById("resetBtn").addEventListener("click", resetDemo);
+  document.getElementById("exportBtn").addEventListener("click", ()=>{
+    const payload = {seed_meta: seed.meta, state};
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "ynbeweging-clubkant-export.json"; a.click();
+    URL.revokeObjectURL(url);
+    toast("Export gedownload ✅");
+  });
+
+  const reqs = state.requests || [];
+  document.getElementById("kpiRequests").textContent = reqs.length;
+  const done = reqs.filter(r=>r.status==="Afgerond").length;
+  document.getElementById("kpiDone").textContent = reqs.length ? `${Math.round((done/reqs.length)*100)}%` : "0%";
+  const ratings = (state.evaluations||[]).map(e=>e.rating);
+  document.getElementById("kpiRating").textContent = ratings.length ? (avg(ratings)).toFixed(1) : "–";
+
+  const counts = {};
+  for(const r of reqs) counts[r.route_id] = (counts[r.route_id]||0)+1;
+  const max = Math.max(1, ...Object.values(counts));
+  document.getElementById("routeBars").innerHTML = seed.routes.map(rt=>{
+    const c = counts[rt.id]||0;
+    const w = (c/max)*100;
+    return `
+      <div class="barrow">
+        <div class="barlabel">${rt.icon} ${rt.title}</div>
+        <div class="bar"><i style="width:${w}%"></i></div>
+        <div class="small">${c}</div>
+      </div>
+    `;
+  }).join("");
+
+  const tbody = document.querySelector("#logTable tbody");
+  const logs = (state.logs||[]).slice(0,40);
+  tbody.innerHTML = logs.length ? logs.map(l=>`
+    <tr><td>${fmtDate(l.t)}</td><td>${l.type}</td><td>${l.msg}</td></tr>
+  `).join("") : `<tr><td colspan="3">Nog geen logs</td></tr>`;
+
+  const stats = Array.from(offerStats(seed,state).values());
+  stats.sort((a,b)=> (b.avg*b.count) - (a.avg*a.count));
+
+  const routesById = new Map(seed.routes.map(r=>[r.id,r]));
+  document.getElementById("kbTableWrap").innerHTML = `
+    <table class="table">
+      <thead><tr><th>Aanbod</th><th>Route</th><th>Rating</th><th>Aantal</th><th>Label</th></tr></thead>
+      <tbody>
+        ${stats.map(s=>{
+          const rt = routesById.get(s.offer.route_id);
+          const badge = provenBadge(seed,state,s.offer.id);
+          const label = badge ? `<span class="tag accent">${badge}</span>` : `<span class="tag">Nieuw</span>`;
+          return `<tr>
+            <td>${s.offer.title}</td>
+            <td>${rt ? rt.title : ""}</td>
+            <td>${s.count ? s.avg.toFixed(1) : "–"}</td>
+            <td>${s.count}</td>
+            <td>${label}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+
+  const offersById = new Map(seed.offers.map(o=>[o.id,o]));
+  const evals = (state.evaluations||[]).filter(e=>e.comment && e.comment.trim()).slice(0,6);
+  document.getElementById("quotes").innerHTML = evals.length ? evals.map(e=>{
+    const o = offersById.get(e.offer_id);
+    return `
+      <div class="card soft" style="margin-bottom:12px">
+        <div class="small">${o?o.title:""} • rating ${e.rating} • ${e.by?`door ${e.by}`:""}</div>
+        <div class="p" style="margin:8px 0 0">“${e.comment}”</div>
+      </div>
+    `;
+  }).join("") : `<div class="p">Nog geen quotes. Voeg een evaluatie toe via de club-kant.</div>`;
+})();
+</script>
+</div>
+  <div id="toast" class="toast"></div>
+  <script src="./assets/app.js"></script>
+</body>
+</html>
