@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "generated": "2026-01-08",
+    "demo": "YnBeweging voor Clubs — voorverkenning"
+  },
+  "club": {
+    "id": "club_wijnjewoude",
+    "name": "SV Wijnjewoude",
+    "type": "voetbalvereniging",
+    "municipality": "Opsterland",
+    "walletCredits": 1500,
+    "roles": [
+      {
+        "id": "u1",
+        "name": "Sanne (Clubadmin)",
+        "role": "bestuurder"
+      },
+      {
+        "id": "u2",
+        "name": "Jelmer (Penningmeester)",
+        "role": "penningmeester"
+      },
+      {
+        "id": "u3",
+        "name": "Kim (Trainer)",
+        "role": "trainer"
+      }
+    ]
+  },
+  "offers": [
+    {
+      "id": "of_veilig_1",
+      "title": "Verenigingsbrede gedragscode + teamafspraken",
+      "provider": "Sport Fryslân",
+      "type": "Begeleiding",
+      "route": "Veilig sportklimaat",
+      "durationMin": 90,
+      "level": "Basis",
+      "priceCredits": 250,
+      "tags": [
+        "route",
+        "workshop"
+      ],
+      "summary": "In 90 minuten leg je met bestuur + trainers de basis voor duidelijke afspraken en een positief klimaat."
+    },
+    {
+      "id": "of_veilig_2",
+      "title": "Training Vertrouwenscontactpersoon (VCP)",
+      "provider": "NOC*NSF partner",
+      "type": "Cursus",
+      "route": "Veilig sportklimaat",
+      "durationMin": 240,
+      "level": "Verdieping",
+      "priceCredits": 350,
+      "tags": [
+        "certificaat",
+        "vcp"
+      ],
+      "summary": "Praktische training: signalen herkennen, doorverwijzen, rolafbakening en communicatie."
+    },
+    {
+      "id": "of_vrijw_1",
+      "title": "Vrijwilligersplan in 1 avond",
+      "provider": "ClubkaderCoach netwerk",
+      "type": "Begeleiding",
+      "route": "Vrijwilligersbeleid",
+      "durationMin": 120,
+      "level": "Basis",
+      "priceCredits": 300,
+      "tags": [
+        "plan",
+        "tooling"
+      ],
+      "summary": "Van losse acties naar een simpel plan met rollen, taken, instroom en behoud."
+    },
+    {
+      "id": "of_fin_1",
+      "title": "Financieel gezond: quickscan + acties",
+      "provider": "Sport Fryslân",
+      "type": "Tool",
+      "route": "Financieel gezond",
+      "durationMin": 60,
+      "level": "Basis",
+      "priceCredits": 200,
+      "tags": [
+        "quickscan",
+        "dashboard"
+      ],
+      "summary": "Inzicht in kosten, contributie, vrijwilligerswaarde en een actie-overzicht voor 3 maanden."
+    },
+    {
+      "id": "of_kader_1",
+      "title": "Trainersbegeleiding: pedagogisch coachen (4 weken)",
+      "provider": "Opleider X",
+      "type": "Pakket",
+      "route": "Opgeleid kader",
+      "durationMin": 240,
+      "level": "Verdieping",
+      "priceCredits": 500,
+      "tags": [
+        "pakket",
+        "praktijk"
+      ],
+      "summary": "Vier sessies met trainers: didactiek, omgaan met gedrag, feedback en structuur op het veld."
+    },
+    {
+      "id": "of_comm_1",
+      "title": "Heldere communicatie: WhatsApp/nieuwsbrief kit",
+      "provider": "Sport Fryslân",
+      "type": "Tool",
+      "route": "Heldere communicatie",
+      "durationMin": 45,
+      "level": "Basis",
+      "priceCredits": 150,
+      "tags": [
+        "templates",
+        "quickwin"
+      ],
+      "summary": "Kant-en-klare templates en een simpele contentkalender om leden en vrijwilligers beter te bereiken."
+    }
+  ],
+  "routes": [
+    {
+      "id": "r1",
+      "name": "Veilig sportklimaat",
+      "goal": "Afspraken, rolverdeling en veilige cultuur."
+    },
+    {
+      "id": "r2",
+      "name": "Vrijwilligersbeleid",
+      "goal": "Instroom, behoud en duidelijke taken."
+    },
+    {
+      "id": "r3",
+      "name": "Financieel gezond",
+      "goal": "Inzicht + acties om structureel gezond te blijven."
+    },
+    {
+      "id": "r4",
+      "name": "Opgeleid kader",
+      "goal": "Trainers ondersteunen en kwaliteit verhogen."
+    },
+    {
+      "id": "r5",
+      "name": "Heldere communicatie",
+      "goal": "Meer bereik, minder ruis, hogere betrokkenheid."
+    }
+  ]
+}

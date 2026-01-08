@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>YnBeweging voor Clubs — Demo</title>
+  <meta name="description" content="Interactieve demo: club-kant + achterkant (monitoring) binnen YnBeweging." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Archivo (matcht jullie brand) -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Ga naar inhoud</a>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand" role="banner">
+        <div class="brand__mark" aria-hidden="true">YB</div>
+        <div class="brand__text">
+          <div class="brand__name">YnBeweging</div>
+          <div class="brand__sub">Voor Clubs — demo</div>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Hoofdnavigatie">
+        <a class="navlink" href="#/">Start</a>
+        <a class="navlink" href="#/club">Club-kant</a>
+        <a class="navlink" href="#/admin">Achterkant</a>
+        <a class="navlink navlink--accent" href="#/presenter">Presenteren</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <div id="app" class="app" aria-live="polite"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__left">
+        <strong>Demo-doel</strong>: het idee “club als gebruiker” tastbaar maken (voorverkenning).
+      </div>
+      <div class="footer__right">
+        <button class="btn btn--ghost" id="resetDemoBtn" type="button" title="Zet demo terug naar beginstand">Reset demo</button>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
